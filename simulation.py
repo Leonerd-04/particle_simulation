@@ -23,7 +23,12 @@ class Simulation:
         # So we only have to compute it once.
         self.coefficient = np.sqrt(2 * self.D * self.dt)
 
-        self.init_particles(params['p_init'])
+        if 'p_init' in params.keys():
+            initializer = params['p_init']
+        else:
+            initializer = np.random.random
+
+        self.init_particles(initializer)
 
     # Initializes all the particles to a random location in bounds.
     # The particles are initialized according to a distribution specified by initializer
