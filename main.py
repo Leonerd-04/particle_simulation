@@ -15,13 +15,14 @@ def main():
     }
 
     simulation = Simulation(params)
-
     simulation.run_steps(1000)
+    # simulation.print()
+    # simulation.plot()
+    j = simulation.to_json()
+    s = Simulation.from_json(j)
 
-    simulation.print()
+    s.plot()
 
-
-    simulation.plot()
 
 if __name__ == "__main__":
     main()
