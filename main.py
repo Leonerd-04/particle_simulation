@@ -2,7 +2,6 @@ from particle import Particle
 from simulation import Simulation
 import numpy as np
 
-
 def main():
     # The parameters of our simulation
     # Eventually these will be read from a json

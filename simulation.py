@@ -56,7 +56,7 @@ class Simulation:
         steps = time // self.dt
         self.run_steps(steps)
 
-    # Make a plot of the simulation using
+    # Make a plot of the simulation using matplotlib and show it to the user
     def plot(self):
         # Parameters to make the plots look a bit nicer
         params = {
@@ -66,6 +66,7 @@ class Simulation:
         }
         plt.rcParams.update(params)
 
+        # The time values to plot against
         t_values = [i * self.dt for i in range(self.current_step)]
 
         for particle in self.particles:
@@ -97,18 +98,16 @@ class Simulation:
 
         return s
 
-
     def print(self):
         print(self)
-
 
     def save_to(self):
         s = self.to_json()
         print(s)
 
-
     def __str__(self):
         return self.format_string()
+
 
     # Helper serialization method
     def to_json(self) -> str:
