@@ -7,9 +7,9 @@ class Simulation:
 
     # L is the bound of our simulation. It goes from 0 up to L.
     # params contains any miscellaneous parameters, namely D and dt
-    def __init__(self, L: float, num_particles: int, params: dict):
-        self.L = L
-        self.num_particles = num_particles
+    def __init__(self, params: dict):
+        self.L = params['L']
+        self.num_particles = params['num_particles']
         self.dt = params['dt']
         self.D = params['D']
         self.particle_init = params['p_init']
@@ -65,14 +65,15 @@ class Simulation:
         width = 10
         s = ""
 
-        # Gets us the first row
+        # First row consists of particle labels and the label for time
         s += f"{'Time:' :<{width - 1}}|"
 
         for i in range(self.num_particles):
-            s += f"{f'Particle {i}' :<{width}}"
+            s += f"{f'P{i + 1}' :<{width}}"
 
         s += f"\n"
 
+        # Subsequent rows list the time value, followed by the x value for each particle at a given point
         for i in range(self.time_step):
             s += f"{f'{i * self.dt:0.2f}' :<{width - 1}}|"
             for particle in self.particles:
