@@ -21,6 +21,7 @@ def main():
     s = Simulation.from_json(j)
 
     s.plot()
+    s.print()
 
 
 if __name__ == "__main__":
