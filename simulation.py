@@ -60,6 +60,24 @@ class Simulation:
         steps = time // self.dt
         self.run_steps(steps)
 
+    def plot(self):
+        # Parameters to make the plots look a bit nicer
+        params = {
+            'axes.titlesize': 14,
+            'axes.labelsize': 12,
+            'axes.titleweight': 'bold'
+        }
+        plt.rcParams.update(params)
+
+        t_values = [i * self.dt for i in range(self.time_step)]
+
+        for particle in self.particles:
+            plt.plot(t_values, particle.history)
+
+        plt.xlabel('Time')
+        plt.ylabel('Particle position')
+        plt.show()
+
     # Formats a string to display an output on the console
     def format_string(self) -> str:
         width = 10
@@ -81,7 +99,6 @@ class Simulation:
             s += "\n"
 
         return s
-
 
     def print(self):
         print(self)
