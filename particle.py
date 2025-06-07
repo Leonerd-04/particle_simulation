@@ -5,7 +5,7 @@ class Particle:
     # We can initialize a particle with some initial conditions
     def __init__(self, x_i: float):
         self.x = x_i
-        self.history = []
+        self.history = []       # Used to store information about the particle's past position
 
         # Record the initial position
         self.history.append(self.x)
