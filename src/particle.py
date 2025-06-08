@@ -25,9 +25,11 @@ class Particle:
         # This is how we record the movement of the particle
         self.history.append(self.x)
 
+
     # Helper serialization method
     def to_json(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__)
+
 
     # Helper deserialization method
     @staticmethod

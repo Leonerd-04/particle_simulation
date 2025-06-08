@@ -32,6 +32,7 @@ class Simulation:
 
         self.init_particles(initializer)
 
+
     # Initializes all the particles to a random location in bounds.
     # The particles are initialized according to a distribution specified by initializer
     # This distribution must range from 0 to 1.
@@ -40,6 +41,7 @@ class Simulation:
         for i in range(self.num_particles):
             x_i = initializer() * self.L
             self.particles.append(Particle(x_i))
+
 
     # Runs one step of the simulation
     def step(self):
@@ -53,10 +55,12 @@ class Simulation:
         for i in range(steps):
             self.step()
 
+
     # Runs for the given amount of time
     def run(self, time: float):
         steps = time // self.dt
         self.run_steps(steps)
+
 
     # Make a plot of the simulation using matplotlib and show it to the user
     def plot(self):
@@ -77,6 +81,7 @@ class Simulation:
         plt.xlabel('Time')
         plt.ylabel('Particle position')
         plt.show()
+
 
     # Formats a string to display an output on the console
     def format_string(self) -> str:
@@ -100,12 +105,15 @@ class Simulation:
 
         return s
 
+
     def print(self):
         print(self)
+
 
     # Helper serialization method
     def to_json(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__)
+
 
     # Helper deserialization method
     @staticmethod
@@ -117,6 +125,7 @@ class Simulation:
         simulation.particles = [Particle.from_json(data) for data in json_data['particles']]
 
         return simulation
+
 
     # Saves a simulation to a given file path
     def save_to(self, path: str):
