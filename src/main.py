@@ -3,7 +3,7 @@ from simulation import Simulation
 import numpy as np
 import json
 
-config_path = "config.json"
+config_path = "../config.json"
 
 def load_config(path: str) -> dict:
     with open(path, 'r') as file:
