@@ -1,7 +1,6 @@
-from particle import Particle
 from simulation import Simulation
-import numpy as np
 import json
+import os
 
 config_path = "../config.json"
 
@@ -24,8 +23,19 @@ def main():
     simulation.run_steps(1000)
     # simulation.print()
     # simulation.plot()
-    j = simulation.to_json()
-    s = Simulation.from_json(j)
+
+    # If the out directory doesn't exist yet, create it
+    try:
+        os.mkdir("../out")
+        print("output directory successfully created")
+    except FileExistsError:
+        print("output directory already exists")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+    simulation.save_to("../out/sim1.json")
+    s = Simulation.open("../out/sim1.json")
 
     s.plot()
     s.print()

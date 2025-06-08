@@ -103,14 +103,6 @@ class Simulation:
     def print(self):
         print(self)
 
-    def save_to(self):
-        s = self.to_json()
-        print(s)
-
-    def __str__(self):
-        return self.format_string()
-
-
     # Helper serialization method
     def to_json(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__)
@@ -125,3 +117,22 @@ class Simulation:
         simulation.particles = [Particle.from_json(data) for data in json_data['particles']]
 
         return simulation
+
+    # Saves a simulation to a given file path
+    def save_to(self, path: str):
+        with open(path, 'w') as file:
+            file.write(self.to_json())
+
+
+    # Creates a simulation class using the given file
+    @staticmethod
+    def open(path: str) -> 'Simulation':
+        with open(path, 'r') as file:
+            json_string = file.read()
+
+        return Simulation.from_json(json_string)
+
+
+    def __str__(self):
+        return self.format_string()
+
