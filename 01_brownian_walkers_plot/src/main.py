@@ -29,7 +29,7 @@ def main():
 
     # If the out directory doesn't exist yet, create it
     try:
-        os.mkdir("../out")
+        os.mkdir("../../out")
         print("output directory successfully created")
     except FileExistsError:
         print("output directory already exists")
@@ -38,7 +38,7 @@ def main():
 
 
     simulation.save_to("../out/sim1.json")
-    s = Simulation.open("../out/sim1.json")
+    s = Simulation.open("../../out/sim1.json")
 
     s.plot()
     s.print()
