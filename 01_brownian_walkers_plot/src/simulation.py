@@ -77,7 +77,7 @@ class Simulation:
         t_values = [i * self.dt for i in range(self.current_step)]
 
         for particle in self.particles:
-            plt.scatter(t_values, particle.history)
+            plt.scatter(t_values, particle.history, s=2)
 
         plt.xlabel('Time')
         plt.ylabel('Particle position')
