@@ -126,11 +126,30 @@ class Simulation:
 
         return simulation
 
+    # Returns a simpler format to save to a txt file
+    # As requested by Dr. Kim
+    def to_txt(self) -> str:
+
+        # The time values to plot against
+        t_values = [i * self.dt for i in range(self.current_step)]
+
+        s = ""
+
+        for i in range(self.current_step):
+            s += f"{t_values[i]} "
+            for particle in self.particles:
+                s += f"{particle.history[i]} "
+            s += "\n"
+
+        return s
 
     # Saves a simulation to a given file path
-    def save_to(self, path: str):
+    def save_to(self, path: str, as_json: bool =True):
         with open(path, 'w') as file:
-            file.write(self.to_json())
+            if as_json:
+                file.write(self.to_json())
+            else:
+                file.write(self.to_txt())
 
 
     # Creates a simulation class using the given file

@@ -37,7 +37,9 @@ def main():
         print(f"An error occurred: {e}")
 
 
-    simulation.save_to("../out/sim1.json")
+    simulation.save_to("../../out/sim1.json")
+    simulation.save_to("../../out/sim1.txt", as_json=False)
+
     s = Simulation.open("../../out/sim1.json")
 
     s.plot()
