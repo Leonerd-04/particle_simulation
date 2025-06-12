@@ -42,7 +42,7 @@ def main():
 
     s = Simulation.open("../../out/sim1.json")
 
-    s.plot()
+    s.plot(save_to="../../out/sim1.png")
     s.print()
 
     save_config(params, config_path)

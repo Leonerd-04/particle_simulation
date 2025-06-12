@@ -63,7 +63,8 @@ class Simulation:
 
 
     # Make a plot of the simulation using matplotlib and show it to the user
-    def plot(self):
+    # If save_to is specified, the plot is saved to whatever directory is specified by the user.
+    def plot(self, save_to: str =None):
         # Parameters to make the plots look a bit nicer
         params = {
             'axes.titlesize': 14,
@@ -80,6 +81,10 @@ class Simulation:
 
         plt.xlabel('Time')
         plt.ylabel('Particle position')
+
+        if save_to:
+            plt.savefig(save_to)
+
         plt.show()
 
 
