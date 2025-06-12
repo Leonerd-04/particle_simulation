@@ -1,3 +1,5 @@
+import numpy as np
+
 from simulation import Simulation
 import json
 import os
@@ -22,6 +24,7 @@ def main():
     # The parameters of our simulation
     params = load_config(config_path)
 
+    params['p_init'] = lambda: np.random.normal(0.5, 0.01)
     simulation = Simulation(params)
     simulation.run_steps(1000)
     # simulation.print()
@@ -37,15 +40,15 @@ def main():
         print(f"An error occurred: {e}")
 
 
-    simulation.save_to("../../out/sim1.json")
-    simulation.save_to("../../out/sim1.txt", as_json=False)
+    simulation.save_to("../../out/sim2.json")
+    simulation.save_to("../../out/sim2.txt", as_json=False)
 
-    s = Simulation.open("../../out/sim1.json")
+    s = Simulation.open("../../out/sim2.json")
 
-    s.plot(save_to="../../out/sim1.png")
-    s.print()
+    s.plot_hists(20, 101)
+    # s.print()
 
-    save_config(params, config_path)
+    # save_config(params, config_path)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,10 @@
 from collections.abc import Callable
 from particle import Particle
 import numpy as np
-import matplotlib.pyplot as plt
 import json
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib import colors
 
 # A class representing a simulation
 class Simulation:
@@ -60,6 +62,69 @@ class Simulation:
     def run(self, time: float):
         steps = time // self.dt
         self.run_steps(steps)
+
+
+    # Samples the simulation's history num_t times to get num_t histograms
+    # each with num_x cells
+    def generate_hist(self, num_x: int, num_t: int) -> list[list]:
+        dx = self.L / num_x
+
+        # Gets us linearly spaced t values to sample
+        # Rounded using integer truncation
+        # Units are multiples of dt.
+        t_values = [np.floor(t) for t in np.linspace(0, self.current_step, num_t)]
+
+        result = []
+        for i in t_values:
+            # Initializes an array of 0's to represent our cells
+            histogram = [0] * num_x
+            for particle in self.particles:
+                # Integer division by the size of the cell gets us which cell the particle is in
+                cell = particle.history[i] // dx
+
+                # There is a particle in the cell just calculated. This counts it.
+                histogram[cell] += 1
+
+            result.append(histogram)
+
+        return result
+
+
+    # Make a plot of the simulation's histogram using matplotlib and show it to the user
+    # If save_to is specified, the plot is saved to whatever directory is specified by the user.
+    # Surprisingly doesn't require generate_hist()
+    def plot_hists(self, num_x: int, num_t: int, save_to: str =None):
+
+        # Gets us linearly spaced t values to sample
+        # Rounded using integer truncation
+        # Units are multiples of dt.
+        t_values = [int(np.floor(t)) for t in np.linspace(0, self.current_step - 1, num_t)]
+        # print(t_values)
+
+        fig, ax = plt.subplots()
+        artists = []
+        for t in t_values:
+            # The distribution is a snapshot of the particles we want to plot at time t
+            distribution = [particle.history[t] for particle in self.particles]
+            N, bins, patches = ax.hist(distribution, bins=num_x, range=(0, self.L), density=True)
+
+            # N represents the values of the histogram bins, so we can use it to set their colors.
+            fracs = N / N.max()
+
+            # we need to normalize the data to 0->1 for the full range of the colormap
+            if t <= 0:
+                norm = colors.Normalize(0, fracs.max())
+
+            # Now, we'll loop through our objects and set the color of each accordingly
+            for thisfrac, thispatch in zip(fracs, patches):
+                color = plt.cm.viridis(norm(thisfrac))
+                thispatch.set_facecolor(color)
+
+            # Add it to our list of artists to animate
+            artists.append(patches)
+
+        ani = animation.ArtistAnimation(fig=fig, artists=artists, interval=125)
+        plt.show()
 
 
     # Make a plot of the simulation using matplotlib and show it to the user
