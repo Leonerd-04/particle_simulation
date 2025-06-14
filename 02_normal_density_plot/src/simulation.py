@@ -66,13 +66,14 @@ class Simulation:
 
     # Samples the simulation's history num_t times to get num_t histograms
     # each with num_x cells
-    def generate_hist(self, num_x: int, num_t: int) -> list[list]:
+    # Returns the histograms themselves and the edges of the bins, for graphing purposes.
+    def generate_hist(self, num_x: int, num_t: int, density: bool=True) -> tuple[list[list], list]:
         dx = self.L / num_x
 
         # Gets us linearly spaced t values to sample
         # Rounded using integer truncation
         # Units are multiples of dt.
-        t_values = [np.floor(t) for t in np.linspace(0, self.current_step, num_t)]
+        t_values = [int(np.floor(t)) for t in np.linspace(0, self.current_step - 1, num_t)]
 
         result = []
         for i in t_values:
@@ -80,14 +81,18 @@ class Simulation:
             histogram = [0] * num_x
             for particle in self.particles:
                 # Integer division by the size of the cell gets us which cell the particle is in
-                cell = particle.history[i] // dx
+                cell = int(particle.history[i] // dx)
 
                 # There is a particle in the cell just calculated. This counts it.
                 histogram[cell] += 1
 
-            result.append(histogram)
+            if density:
+                number_density_histogram = [value / dx for value in histogram]
+                result.append(number_density_histogram)
+            else:
+                result.append(histogram)
 
-        return result
+        return result, [i * dx for i in range(num_x + 1)]
 
 
     # Make a plot of the simulation's histogram using matplotlib and show it to the user
@@ -103,6 +108,9 @@ class Simulation:
 
         fig, ax = plt.subplots()
         artists = []
+
+        # Stores the histograms if they are to be saved
+        hists = []
         for t in t_values:
             # The distribution is a snapshot of the particles we want to plot at time t
             distribution = [particle.history[t] for particle in self.particles]
@@ -122,6 +130,25 @@ class Simulation:
 
             # Add it to our list of artists to animate
             artists.append(patches)
+
+            if save_to:
+                hists.append(N)
+
+        ani = animation.ArtistAnimation(fig=fig, artists=artists, interval=125)
+        plt.show()
+
+    # Make a plot of the simulation's histogram using matplotlib and show it to the user
+    # Uses stairs and pre-generated histograms instead of letting them be generated.
+    def plot_hists_generated(self, num_x: int, num_t: int):
+        hists, edges = self.generate_hist(num_x, num_t)
+
+        fig, ax = plt.subplots()
+        artists = []
+        for hist in hists:
+            patch = ax.stairs(hist, edges, fill=True)
+            patch.set_facecolor((0.83, 0.04, 0.30))
+
+            artists.append([patch])
 
         ani = animation.ArtistAnimation(fig=fig, artists=artists, interval=125)
         plt.show()

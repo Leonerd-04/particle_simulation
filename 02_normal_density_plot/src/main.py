@@ -26,7 +26,7 @@ def main():
 
     params['p_init'] = lambda: np.random.normal(0.5, 0.01)
     simulation = Simulation(params)
-    simulation.run_steps(1000)
+    simulation.run_steps(600)
     # simulation.print()
     # simulation.plot()
 
@@ -45,7 +45,7 @@ def main():
 
     s = Simulation.open("../../out/sim2.json")
 
-    s.plot_hists(20, 101)
+    s.plot_hists_generated(20, 100)
     # s.print()
 
     # save_config(params, config_path)
