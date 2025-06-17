@@ -5,7 +5,7 @@ import json
 import os
 
 config_path = "../config.json"
-out_path = "../../out/sim2"
+out_path = "../../out/sim3"
 
 
 def load_config(path: str) -> dict:
