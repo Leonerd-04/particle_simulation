@@ -1,5 +1,5 @@
 import numpy as np
-
+import plots
 from simulation import Simulation
 import json
 import os
@@ -50,7 +50,7 @@ def main():
 
     s = Simulation.open("../../out/sim2.json")
 
-    s.plot_hists_generated(20, 100, save_to="../../out/sim2_hists.txt")
+    s.plot_hists_generated(save_to="../../out/sim2_hists.txt")
     # s.print()
 
     # save_config(params, config_path)

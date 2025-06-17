@@ -7,12 +7,15 @@ import json
 class Simulation:
 
     # L is the bound of our simulation. It goes from 0 up to L.
-    # params contains any miscellaneous parameters, namely D and dt
+    # params contains any miscellaneous parameters, namely D and dt, as well as the parameters to track histograms
     def __init__(self, params: dict):
         self.L = params['L']
         self.num_particles = params['num_particles']
         self.dt = params['dt']
         self.D = params['D']
+
+        self.histogram_config = params['histogram_config']
+
         self.particles = []
         self.current_step = 1       # Represents the number of steps that have been computed,
                                     # including the initial step
@@ -64,7 +67,11 @@ class Simulation:
     # Samples the simulation's history num_t times to get num_t histograms
     # each with num_x cells
     # Returns the histograms themselves and the edges of the bins, for graphing purposes.
-    def generate_hist(self, num_x: int, num_t: int, density: bool=True) -> tuple[list[list], list]:
+    def generate_hist(self) -> tuple[list[list], list]:
+        num_x = self.histogram_config['num_x']
+        num_t = self.histogram_config['num_t']
+        density = self.histogram_config['number_density']
+
         dx = self.L / num_x
 
         # Gets us linearly spaced t values to sample
@@ -92,8 +99,10 @@ class Simulation:
         return result, [i * dx for i in range(num_x + 1)]
 
 
-    def get_hist_txt(self, num_x: int, num_t: int, density: bool=True) -> str:
-        hists, _ = self.generate_hist(num_x, num_t, density)
+    def get_hist_txt(self) -> str:
+        hists, _ = self.generate_hist()
+        num_t = self.histogram_config['num_t']
+
         t_values = [int(np.floor(t)) for t in np.linspace(0, self.current_step - 1, num_t)]
 
         s = ""
@@ -106,9 +115,9 @@ class Simulation:
         return s
 
 
-    def save_hist_txt(self, num_x: int, num_t: int, path: str, density: bool=True):
+    def save_hist_txt(self, path: str):
         with open(path, 'w') as file:
-            file.write(self.get_hist_txt(num_x, num_t, density))
+            file.write(self.get_hist_txt())
 
     # Formats a string to display an output on the console
     def format_string(self) -> str:

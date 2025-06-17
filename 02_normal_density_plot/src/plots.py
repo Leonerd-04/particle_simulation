@@ -32,9 +32,12 @@ def plot(simulation: Simulation, save_to: str =None):
 
 # Make a plot of the simulation's histogram using matplotlib and show it to the user
 # If save_to is specified, the plot is saved to whatever directory is specified by the user.
-# Surprisingly doesn't require generate_hist()
+# Generates the histograms using the automatic function from matplotlib
 # Unused
-def plot_hists(simulation: Simulation, num_x: int, num_t: int, save_to: str =None):
+def plot_hists(simulation: Simulation, save_to: str =None):
+    num_x = simulation.histogram_config['num_x']
+    num_t = simulation.histogram_config['num_t']
+    density = simulation.histogram_config['number_density']
 
     # Gets us linearly spaced t values to sample
     # Rounded using integer truncation
@@ -75,8 +78,8 @@ def plot_hists(simulation: Simulation, num_x: int, num_t: int, save_to: str =Non
 
 # Make a plot of the simulation's histogram using matplotlib and show it to the user
 # Uses stairs and pre-generated histograms instead of letting them be generated.
-def plot_hists_generated(simulation: Simulation, num_x: int, num_t: int, density=True, save_to: str =None):
-    hists, edges = simulation.generate_hist(num_x, num_t)
+def plot_hists_generated(simulation: Simulation, save_to: str =None):
+    hists, edges = simulation.generate_hist()
 
     fig, ax = plt.subplots()
     artists = []
@@ -91,10 +94,10 @@ def plot_hists_generated(simulation: Simulation, num_x: int, num_t: int, density
 
     # If the user specified a save location, save the histograms to a txt
     if save_to:
-        simulation.save_hist_txt(num_x, num_t, save_to, density)
+        simulation.save_hist_txt(save_to)
 
 
-# Add these to the simulation class
+# Add these to the simulation class to be able to use the dot notation
 Simulation.plot = plot
 Simulation.plot_hists = plot_hists
 Simulation.plot_hists_generated = plot_hists_generated
