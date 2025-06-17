@@ -34,12 +34,12 @@ def plot(simulation: Simulation, save_to: str =None):
 # If save_to is specified, the plot is saved to whatever directory is specified by the user.
 # Surprisingly doesn't require generate_hist()
 # Unused
-def plot_hists(self, num_x: int, num_t: int, save_to: str =None):
+def plot_hists(simulation: Simulation, num_x: int, num_t: int, save_to: str =None):
 
     # Gets us linearly spaced t values to sample
     # Rounded using integer truncation
     # Units are multiples of dt.
-    t_values = [int(np.floor(t)) for t in np.linspace(0, self.current_step - 1, num_t)]
+    t_values = [int(np.floor(t)) for t in np.linspace(0, simulation.current_step - 1, num_t)]
     # print(t_values)
 
     fig, ax = plt.subplots()
@@ -49,8 +49,8 @@ def plot_hists(self, num_x: int, num_t: int, save_to: str =None):
     hists = []
     for t in t_values:
         # The distribution is a snapshot of the particles we want to plot at time t
-        distribution = [particle.history[t] for particle in self.particles]
-        N, bins, patches = ax.hist(distribution, bins=num_x, range=(0, self.L), density=True)
+        distribution = [particle.history[t] for particle in simulation.particles]
+        N, bins, patches = ax.hist(distribution, bins=num_x, range=(0, simulation.L), density=True)
 
         # N represents the values of the histogram bins, so we can use it to set their colors.
         fracs = N / N.max()
@@ -75,8 +75,8 @@ def plot_hists(self, num_x: int, num_t: int, save_to: str =None):
 
 # Make a plot of the simulation's histogram using matplotlib and show it to the user
 # Uses stairs and pre-generated histograms instead of letting them be generated.
-def plot_hists_generated(self, num_x: int, num_t: int, density=True, save_to: str =None):
-    hists, edges = self.generate_hist(num_x, num_t)
+def plot_hists_generated(simulation: Simulation, num_x: int, num_t: int, density=True, save_to: str =None):
+    hists, edges = simulation.generate_hist(num_x, num_t)
 
     fig, ax = plt.subplots()
     artists = []
@@ -91,11 +91,10 @@ def plot_hists_generated(self, num_x: int, num_t: int, density=True, save_to: st
 
     # If the user specified a save location, save the histograms to a txt
     if save_to:
-        self.save_hist_txt(num_x, num_t, save_to, density)
+        simulation.save_hist_txt(num_x, num_t, save_to, density)
 
 
-
-
+# Add these to the simulation class
 Simulation.plot = plot
 Simulation.plot_hists = plot_hists
 Simulation.plot_hists_generated = plot_hists_generated
