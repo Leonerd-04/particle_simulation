@@ -1,6 +1,6 @@
 {
   "L": 100,
-  "num_particles": 1000,
+  "num_particles": 3000,
   "dt": 0.25,
   "D": 3,
   "histogram_config": {
