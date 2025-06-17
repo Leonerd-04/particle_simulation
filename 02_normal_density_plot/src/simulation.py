@@ -95,9 +95,28 @@ class Simulation:
         return result, [i * dx for i in range(num_x + 1)]
 
 
+    def get_hist_txt(self, num_x: int, num_t: int, density: bool=True) -> str:
+        hists, _ = self.generate_hist(num_x, num_t, density)
+        t_values = [int(np.floor(t)) for t in np.linspace(0, self.current_step - 1, num_t)]
+
+        s = ""
+        for hist, t in zip(hists, t_values):
+            s += f"{self.dt * t} "
+            for cell in hist:
+                s += f"{cell} "
+            s += "\n"
+
+        return s
+
+
+    def save_hist_txt(self, num_x: int, num_t: int, path: str, density: bool=True):
+        with open(path, 'w') as file:
+            file.write(self.get_hist_txt(num_x, num_t, density))
+
     # Make a plot of the simulation's histogram using matplotlib and show it to the user
     # If save_to is specified, the plot is saved to whatever directory is specified by the user.
     # Surprisingly doesn't require generate_hist()
+    # Unused
     def plot_hists(self, num_x: int, num_t: int, save_to: str =None):
 
         # Gets us linearly spaced t values to sample
@@ -139,7 +158,7 @@ class Simulation:
 
     # Make a plot of the simulation's histogram using matplotlib and show it to the user
     # Uses stairs and pre-generated histograms instead of letting them be generated.
-    def plot_hists_generated(self, num_x: int, num_t: int):
+    def plot_hists_generated(self, num_x: int, num_t: int, density=True, save_to: str =None):
         hists, edges = self.generate_hist(num_x, num_t)
 
         fig, ax = plt.subplots()
@@ -152,6 +171,10 @@ class Simulation:
 
         ani = animation.ArtistAnimation(fig=fig, artists=artists, interval=125)
         plt.show()
+
+        # If the user specified a save location, save the histograms to a txt
+        if save_to:
+            self.save_hist_txt(num_x, num_t, save_to, density)
 
 
     # Make a plot of the simulation using matplotlib and show it to the user

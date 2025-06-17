@@ -50,7 +50,7 @@ def main():
 
     s = Simulation.open("../../out/sim2.json")
 
-    s.plot_hists_generated(20, 100)
+    s.plot_hists_generated(20, 100, save_to="../../out/sim2_hists.txt")
     # s.print()
 
     # save_config(params, config_path)
