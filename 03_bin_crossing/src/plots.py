@@ -81,15 +81,30 @@ def plot_hists(simulation: Simulation, save_to: str =None):
 def plot_hists_generated(simulation: Simulation, save_to: str =None):
     hists, edges = simulation.generate_hist()
 
+    # Gets us linearly spaced t values to sample
+    # Rounded using integer truncation
+    # Units are multiples of dt.
+    t_values = [int(np.floor(t)) for t in np.linspace(0, simulation.current_step - 1, simulation.histogram_config['num_t'])]
+
+    # Gets only the crossings for the particular values we want
+    crossings = [simulation.bin_crossings[t] for t in t_values]
+
     fig, ax = plt.subplots()
     artists = []
-    for hist in hists:
-        patch = ax.stairs(hist, edges, fill=True)
-        patch.set_facecolor((0.83, 0.04, 0.30))
+    for hist, crossing in zip(hists, crossings):
+        hist_patch = ax.stairs(hist, edges, fill=True)
+        hist_patch.set_facecolor((0.80, 0.30, 0.50))
 
-        artists.append([patch])
+        # Shows the boundary condition better to also have the first crossing at the end
+        crossing.append(crossing[0])
+        stem_patch = ax.stem(edges, crossing)
 
-    ani = animation.ArtistAnimation(fig=fig, artists=artists, interval=125)
+        patches = list(stem_patch)
+        patches.append(hist_patch)
+
+        artists.append(patches)
+
+    ani = animation.ArtistAnimation(fig=fig, artists=artists, interval=500)
     plt.show()
 
     # If the user specified a save location, save the histograms to a txt

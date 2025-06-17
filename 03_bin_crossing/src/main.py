@@ -48,13 +48,7 @@ def main():
         simulation.save_to(f"{out_path}.json")
         simulation.save_to(f"{out_path}.txt", as_json=False)
 
-
-    s = Simulation.open(f"{out_path}.json")
-
-    s.plot_hists_generated(save_to=f"{out_path}_hists.txt")
-    # s.print()
-
-    # save_config(params, config_path)
+    simulation.plot_hists_generated()
 
 
 if __name__ == "__main__":
