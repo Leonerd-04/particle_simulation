@@ -5,6 +5,7 @@ import json
 import os
 
 config_path = "../config.json"
+out_path = "../../out/sim2"
 
 
 def load_config(path: str) -> dict:
@@ -41,16 +42,16 @@ def main():
         print(f"An error occurred: {e}")
 
 
-    if not os.path.exists("../../out/sim2.json"):
+    if not os.path.exists(f"{out_path}.json"):
         simulation.run_steps(600)
 
-        simulation.save_to("../../out/sim2.json")
-        simulation.save_to("../../out/sim2.txt", as_json=False)
+        simulation.save_to(f"{out_path}.json")
+        simulation.save_to(f"{out_path}.txt", as_json=False)
 
 
-    s = Simulation.open("../../out/sim2.json")
+    s = Simulation.open(f"{out_path}.json")
 
-    s.plot_hists_generated(save_to="../../out/sim2_hists.txt")
+    s.plot_hists_generated(save_to=f"{out_path}_hists.txt")
     # s.print()
 
     # save_config(params, config_path)
