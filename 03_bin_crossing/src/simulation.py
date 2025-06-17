@@ -17,8 +17,12 @@ class Simulation:
         self.histogram_config = params['histogram_config']
 
         self.particles = []
+        self.bin_crossings = []
         self.current_step = 1       # Represents the number of steps that have been computed,
                                     # including the initial step
+
+        # Append a "0th" bin crossing to align this array with the histograms
+        self.bin_crossings.append([0] * self.histogram_config['num_x'])
 
         # This coefficient multiplies with the normal distribution to step the simulation forward.
         # I assume D and dt will stay constant throughout the simulation
@@ -42,14 +46,26 @@ class Simulation:
         self.particles = []
         for i in range(self.num_particles):
             x_i = initializer() * self.L
-            self.particles.append(Particle(x_i))
+            self.particles.append(Particle(x_i, self.histogram_config['num_x']))
 
 
     # Runs one step of the simulation
+    # Also calculates the number of particles that cross cells in this step
     def step(self):
+        crossings = [0] * self.histogram_config['num_x']
         for particle in self.particles:
-            particle.update(self.L, self.coefficient)
+            is_going_right, crossed_bins = particle.update(self.L, self.coefficient)
+
+            if is_going_right:
+                increment = 1
+            else:
+                increment = -1
+
+            for bin in crossed_bins:
+                crossings[bin] += increment
+
         self.current_step += 1
+        self.bin_crossings.append(crossings)
 
 
     # Runs a given number of steps
