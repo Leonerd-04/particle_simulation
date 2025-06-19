@@ -100,12 +100,15 @@ def plot_hists_generated(simulation: Simulation, save_to: str =None):
         y_values = [f(x, k * simulation.dt) for x in x_values]
         fourier_patch = ax.plot(x_values, y_values, color=(0.05, 0.50, 0.24))
 
-        f = simulation.get_fourier_func(10)
+        g = simulation.get_gaussian_func(5)
 
-        y_values = [f(x, k * simulation.dt) for x in x_values]
-        fourier_patch = ax.plot(x_values, y_values, color=(0.05, 0.50, 0.24))
+        y_values = [g(x, k * simulation.dt) for x in x_values]
+        gauss_patch = ax.plot(x_values, y_values, color=(0.15, 0.10, 0.40))
 
         fourier_patch.append(hist_patch)
+
+        for patch in gauss_patch:
+            fourier_patch.append(patch)
 
         artists.append(fourier_patch)
 
