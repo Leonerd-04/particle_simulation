@@ -25,7 +25,7 @@ def main():
     # The parameters of our simulation
     params = load_config(config_path)
 
-    params['p_init'] = lambda: np.random.normal(0.5, 0.01)
+    params['p_init'] = lambda: 0.5
     simulation = Simulation(params)
 
     simulation.run_steps(600)
@@ -42,16 +42,9 @@ def main():
         print(f"An error occurred: {e}")
 
 
-    if not os.path.exists(f"{out_path}.json"):
-        simulation.run_steps(600)
+    # s = Simulation.open(f"{out_path}.json")
 
-        simulation.save_to(f"{out_path}.json")
-        simulation.save_to(f"{out_path}.txt", as_json=False)
-
-
-    s = Simulation.open(f"{out_path}.json")
-
-    s.plot_hists_generated(save_to=f"{out_path}_hists.txt")
+    simulation.plot_hists_generated(save_to=f"{out_path}_hists.txt")
     # s.print()
 
     # save_config(params, config_path)

@@ -3,6 +3,7 @@ import matplotlib.animation as animation
 from matplotlib import colors
 from simulation import Simulation
 import numpy as np
+import solutions
 
 # Make a plot of the simulation using matplotlib and show it to the user
 # If save_to is specified, the plot is saved to whatever directory is specified by the user.
@@ -81,13 +82,32 @@ def plot_hists(simulation: Simulation, save_to: str =None):
 def plot_hists_generated(simulation: Simulation, save_to: str =None):
     hists, edges = simulation.generate_hist()
 
+    # Gets us linearly spaced t values to sample
+    # Rounded using integer truncation
+    # Units are multiples of dt.
+    t_values = [int(np.floor(t)) for t in np.linspace(0, simulation.current_step - 1, simulation.histogram_config['num_t'])]
+    x_values = np.linspace(0, simulation.L, 100)
+
+
     fig, ax = plt.subplots()
     artists = []
-    for hist in hists:
-        patch = ax.stairs(hist, edges, fill=True)
-        patch.set_facecolor((0.83, 0.04, 0.30))
+    for hist, k in zip(hists, t_values):
+        hist_patch = ax.stairs(hist, edges, fill=True)
+        hist_patch.set_facecolor((0.80, 0.30, 0.50))
 
-        artists.append([patch])
+        f = simulation.get_fourier_func(10)
+
+        y_values = [f(x, k * simulation.dt) for x in x_values]
+        fourier_patch = ax.plot(x_values, y_values, color=(0.05, 0.50, 0.24))
+
+        f = simulation.get_fourier_func(10)
+
+        y_values = [f(x, k * simulation.dt) for x in x_values]
+        fourier_patch = ax.plot(x_values, y_values, color=(0.05, 0.50, 0.24))
+
+        fourier_patch.append(hist_patch)
+
+        artists.append(fourier_patch)
 
     ani = animation.ArtistAnimation(fig=fig, artists=artists, interval=125)
     plt.show()
