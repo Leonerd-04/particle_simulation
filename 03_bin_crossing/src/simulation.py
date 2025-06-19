@@ -61,8 +61,8 @@ class Simulation:
             else:
                 increment = -1
 
-            for bin in crossed_bins:
-                crossings[bin] += increment
+            for boundary in crossed_bins:
+                crossings[boundary] += increment
 
         self.current_step += 1
         self.bin_crossings.append(crossings)
