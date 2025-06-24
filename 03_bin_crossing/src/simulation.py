@@ -32,11 +32,11 @@ class Simulation:
         # Currently, the initializer function is left unspecified due to how the options
         # are read from a json. This deals with its default value.
         if 'p_init' in params.keys():
-            initializer = params['p_init']
+            self.initializer = params['p_init']
         else:
-            initializer = np.random.random
+            self.initializer = np.random.random
 
-        self.init_particles(initializer)
+        self.init_particles(self.initializer)
 
 
     # Initializes all the particles to a random location in bounds.
