@@ -26,7 +26,7 @@ def get_fourier_func(sim: Simulation, n: int) -> Callable[[float, float], float]
 
     return fourier
 
-# Defines and returns the fourier series function
+# Defines and returns the fourier series formulation for the boundary crossings
 # n is how far out to truncate it.
 def get_fourier_bound_func(sim: Simulation, n: int) -> Callable[[float, float], float]:
     N = sim.num_particles
@@ -71,7 +71,7 @@ def get_gaussian_func(sim: Simulation, n: int) -> Callable[[float, float], float
 
     return gaussian
 
-# Defines and returns the other series function with gaussians
+# Defines and returns the gaussian formulation of the boundary crossings
 # n is how far out to truncate it.
 def get_gaussian_bound_func(sim: Simulation, n: int) -> Callable[[float, float], float]:
     N = sim.num_particles
