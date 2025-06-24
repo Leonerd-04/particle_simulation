@@ -25,10 +25,11 @@ def main():
     # The parameters of our simulation
     params = load_config(config_path)
 
-    params['p_init'] = lambda: np.random.normal(0.5, 0.01)
+    # params['p_init'] = lambda: np.random.normal(0.5, 0.01)
+    params['p_init'] = lambda: 0.5
     simulation = Simulation(params)
 
-    simulation.run_steps(600)
+    simulation.run_steps(100)
     # simulation.print()
     # simulation.plot()
 
@@ -43,7 +44,7 @@ def main():
 
 
     if not os.path.exists(f"{out_path}.json"):
-        simulation.run_steps(600)
+        simulation.run_steps(100)
 
         simulation.save_to(f"{out_path}.json")
         simulation.save_to(f"{out_path}.txt", as_json=False)
