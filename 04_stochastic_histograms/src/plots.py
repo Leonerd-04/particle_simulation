@@ -157,7 +157,9 @@ def plot_aggregated_hists(sim: Simulation, ax: Axes):
     ax.set_ylabel('Probability Density')
     ax.set_title(f"N={sim.num_particles}, dx={dx}, D={sim.D}")
 
-    ax.hist(hists, bins=25, density=True, label="Simulation Data")
+
+
+    ax.hist(hists, bins=int(np.log10(sim.num_particles) * 6.25), density=True, label="Simulation Data")
 
     sigma = np.sqrt(expected_var)
 
