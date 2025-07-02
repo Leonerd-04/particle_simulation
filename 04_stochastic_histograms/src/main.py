@@ -29,7 +29,7 @@ def main():
     # params['p_init'] = lambda: 0.5
     simulation = Simulation(params)
 
-    simulation.run_steps(200)
+    simulation.run_steps(100)
     # simulation.print()
     # simulation.plot()
 
@@ -45,7 +45,8 @@ def main():
     simulation.save_to(f"{out_path}.json")
     simulation.save_to(f"{out_path}.txt", as_json=False)
 
-    simulation.plot_hists_generated()
+
+    plots.plot_multiple_hists([simulation, simulation])
 
 
 
