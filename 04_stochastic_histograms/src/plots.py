@@ -174,11 +174,11 @@ def plot_aggregated_hists(sim: Simulation, ax: Axes):
     ax.legend(loc="upper left")
 
 
-def plot_multiple_hists(sims: list[Simulation]):
-    fig, axes = plt.subplots(1, 2)
+def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int):
+    fig, axes = plt.subplots(num_x, num_y, squeeze=True)
 
     for i in range(len(sims)):
-        sims[i].plot_aggregated_hists(axes[i])
+        plot_aggregated_hists(sims[i], axes[i % 2, i // 2])
 
     plt.show()
 

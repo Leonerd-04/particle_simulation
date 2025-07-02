@@ -3,6 +3,7 @@ import plots
 from simulation import Simulation
 import json
 import os
+from post_process import *
 
 config_path = "../configs/config_0.json"
 out_path = "../../out/sim3"
@@ -22,17 +23,6 @@ def save_config(config: dict, path: str):
 
 
 def main():
-    # The parameters of our simulation
-    params = load_config(config_path)
-
-    # params['p_init'] = lambda: np.random.normal(0.5, 0.01)
-    # params['p_init'] = lambda: 0.5
-    simulation = Simulation(params)
-
-    simulation.run_steps(100)
-    # simulation.print()
-    # simulation.plot()
-
     # If the out directory doesn't exist yet, create it
     try:
         os.mkdir("../../out")
@@ -42,13 +32,15 @@ def main():
     except Exception as e:
         print(f"An error occurred: {e}")
 
-    simulation.save_to(f"{out_path}.json")
-    simulation.save_to(f"{out_path}.txt", as_json=False)
+    for i in range(4):
+        params = load_config(f"../configs/config_{i}.json")
+        simulation = Simulation(params)
 
-
-    plots.plot_multiple_hists([simulation, simulation])
+        simulation.run_steps(100)
+        simulation.save_to(f"../../out/sim4_{i}.json")
 
 
 
 if __name__ == "__main__":
     main()
+    plot_graphs()
