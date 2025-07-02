@@ -1,0 +1,11 @@
+{
+  "L": 100,
+  "num_particles": 100,
+  "dt": 0.25,
+  "D": 3,
+  "histogram_config": {
+    "num_x": 100,
+    "num_t": 100,
+    "number_density": true
+  }
+}

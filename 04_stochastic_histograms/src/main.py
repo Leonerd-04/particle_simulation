@@ -4,7 +4,7 @@ from simulation import Simulation
 import json
 import os
 
-config_path = "../config.json"
+config_path = "../configs/config_0.json"
 out_path = "../../out/sim3"
 
 
