@@ -177,15 +177,16 @@ def plot_aggregated_hists(sim: Simulation, ax: Axes):
 
 
 def plot_flux_hists(sim: Simulation, ax: Axes):
-    hists_2D, _ = sim.bin_crossings[1:]               # Get our histogram values
-    hists = reduce(lambda x, y: x + y, hists_2D)    # Reduce them to one array
+    hists_2D = sim.bin_crossings               # Get our histogram values
+    print(sim.bin_crossings)
+    hists = [N / sim.dt for N in reduce(lambda x, y: x + y, hists_2D)]   # Reduce them to one array
     hist = [arr[0] for arr in hists_2D]             # This gets us the statistics for just one bin if needed
 
     # This comes from my analysis
     n = sim.num_particles / sim.L
     dx = sim.L / sim.histogram_config['num_x']
     expected_mean = 0
-    expected_var = n * np.sqrt(2 * sim.D / (np.pi * sim.dt ** 3))
+    expected_var = 2 * n * np.sqrt(sim.D / (np.pi * sim.dt ** 3))
 
     empirical_mean = np.mean(hists)
     empirical_var = np.var(hists)

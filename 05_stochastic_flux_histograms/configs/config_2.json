@@ -1,7 +1,7 @@
 {
   "L": 100,
-  "num_particles": 10000,
-  "dt": 0.25,
+  "num_particles": 1000,
+  "dt": 0.01,
   "D": 3,
   "histogram_config": {
     "num_x": 100,

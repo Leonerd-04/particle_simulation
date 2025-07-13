@@ -20,9 +20,11 @@ class Simulation:
         self.bin_crossings = []
         self.current_step = 1       # Represents the number of steps that have been computed,
                                     # including the initial step
-
-        # Append a "0th" bin crossing to align this array with the histograms
-        self.bin_crossings.append([0] * self.histogram_config['num_x'])
+        if 'bin_crossings' in params.keys():
+            self.bin_crossings = params['bin_crossings']
+        else:
+            # Append a "0th" bin crossing to align this array with the histograms
+            self.bin_crossings.append([0] * self.histogram_config['num_x'])
 
         # This coefficient multiplies with the normal distribution to step the simulation forward.
         # I assume D and dt will stay constant throughout the simulation
