@@ -36,7 +36,7 @@ def main():
         params = load_config(f"../configs/config_{i}.json")
         simulation = Simulation(params)
 
-        simulation.run_steps(100)
+        simulation.run_steps(600)
         simulation.save_to(f"../../out/sim4_{i}.json")
 
 

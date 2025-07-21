@@ -157,14 +157,18 @@ def plot_aggregated_hists(sim: Simulation, ax: Axes):
     ax.set_ylabel('Probability Density')
     ax.set_title(f"N={sim.num_particles}, dx={dx}, D={sim.D}")
 
-
-
-    ax.hist(hists, bins=int(np.log10(sim.num_particles) * 6.25), density=True, label="Simulation Data")
-
     sigma = np.sqrt(expected_var)
 
-    left = expected_mean - 3 * sigma
-    right = expected_mean + 3 * sigma
+    left = expected_mean - 5 * sigma
+    right = expected_mean + 5 * sigma
+
+    bin_left = int(left * dx) / dx
+    bin_right = int(right * dx) / dx
+
+    bins = np.linspace(bin_left, bin_right, (int(right * dx) - int(left * dx)))
+
+
+    ax.hist(hists, bins=bins, density=True, label="Simulation Data")
 
     x = np.linspace(left, right, 1000)
     ax.plot(x, stats.norm.pdf(x, expected_mean, sigma), label="Bell Curve")
@@ -177,7 +181,7 @@ def plot_aggregated_hists(sim: Simulation, ax: Axes):
 
 
 def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int):
-    fig, axes = plt.subplots(num_x, num_y, squeeze=True)
+    fig, axes = plt.subplots(num_x, num_y, squeeze=True, layout='constrained')
 
     for i in range(len(sims)):
         plot_aggregated_hists(sims[i], axes[i % 2, i // 2])

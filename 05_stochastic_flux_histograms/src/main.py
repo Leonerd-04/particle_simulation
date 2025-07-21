@@ -37,7 +37,7 @@ def main():
         simulation = Simulation(params)
 
         simulation.run_steps(100)
-        simulation.save_to(f"../../out/sim4_{i}.json")
+        simulation.save_to(f"../../out/sim5_{i}.json")
 
 
 
