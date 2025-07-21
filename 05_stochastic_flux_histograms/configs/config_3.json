@@ -2,9 +2,9 @@
   "L": 100,
   "num_particles": 100,
   "dt": 1,
-  "D": 3,
+  "D": 1,
   "histogram_config": {
-    "num_x": 5,
+    "num_x": 5000,
     "num_t": 100,
     "number_density": true
   }

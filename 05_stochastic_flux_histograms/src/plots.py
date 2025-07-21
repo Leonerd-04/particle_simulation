@@ -177,34 +177,36 @@ def plot_aggregated_hists(sim: Simulation, ax: Axes):
 
 
 def plot_flux_hists(sim: Simulation, ax: Axes):
-    hists_2D = sim.bin_crossings               # Get our histogram values
-    print(sim.bin_crossings)
+    hists_2D = sim.bin_crossings[1:]               # Get our histogram values
     hists = [N / sim.dt for N in reduce(lambda x, y: x + y, hists_2D)]   # Reduce them to one array
     hist = [arr[0] for arr in hists_2D]             # This gets us the statistics for just one bin if needed
 
     # This comes from my analysis
     n = sim.num_particles / sim.L
-    dx = sim.L / sim.histogram_config['num_x']
     expected_mean = 0
     expected_var = 2 * n * np.sqrt(sim.D / (np.pi * sim.dt ** 3))
 
     empirical_mean = np.mean(hists)
     empirical_var = np.var(hists)
 
+    # ax.text(0.01, 0.79, f"N={sim.num_particles}, dt={sim.dt}, D={sim.D}", transform=ax.transAxes, ha= 'left')
     ax.text(0.97, 0.93, f"Analysis: µ={expected_mean}, σ²={expected_var:.2f}", transform=ax.transAxes, ha='right')
-    ax.text(0.97, 0.86, f"Data: µ={empirical_mean}, σ²={empirical_var:.2f}", transform=ax.transAxes, ha= 'right')
+    ax.text(0.97, 0.86, f"Data: µ={empirical_mean:.2f}, σ²={empirical_var:.2f}", transform=ax.transAxes, ha= 'right')
     ax.set_xlabel('Flux (number/second)')
     ax.set_ylabel('Probability Density')
-    ax.set_title(f"N={sim.num_particles}, dt={sim.dt}, D={sim.D}")
-
-
-
-    ax.hist(hists, bins=int(np.log10(sim.num_particles) * 6.25), density=True, label="Simulation Data")
+    ax.set_title( f"N={sim.num_particles}, D={sim.D}, dx={sim.L/sim.histogram_config['num_x']}, dt={sim.dt}")
 
     sigma = np.sqrt(expected_var)
 
-    left = expected_mean - 3 * sigma
-    right = expected_mean + 3 * sigma
+    left = expected_mean - 5 * sigma
+    right = expected_mean + 5 * sigma
+
+    bin_left = int(left * sim.dt) / sim.dt
+    bin_right = int(right * sim.dt) / sim.dt
+
+    bins = np.linspace(bin_left, bin_right, int(right * sim.dt) - int(left * sim.dt))
+
+    ax.hist(hists, bins=bins, density=True, label="Simulation Data")
 
     x = np.linspace(left, right, 1000)
     ax.plot(x, stats.norm.pdf(x, expected_mean, sigma), label="Bell Curve")
@@ -214,7 +216,7 @@ def plot_flux_hists(sim: Simulation, ax: Axes):
 
 
 def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int, flux=False):
-    fig, axes = plt.subplots(num_x, num_y, squeeze=True)
+    fig, axes = plt.subplots(num_x, num_y, squeeze=True, layout='constrained')
 
     for i in range(len(sims)):
         if flux:
