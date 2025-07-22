@@ -1,10 +1,11 @@
 from simulation import Simulation
+from matplotlib.pyplot import figure
 import plots
 
 def plot_graphs():
     sim2 = Simulation.open("../../out/sim6-2.json")
     sim2.initializer = lambda: 0.5
-    sim2.plot_hists_at_steps([1, 15, 95], 3, 1)
+    sim2.plot_hists_at_steps([1, 15, 192], 3, 1)
 
     sim3 = Simulation.open("../../out/sim6-3.json")
     sim3.initializer = lambda: 0.5

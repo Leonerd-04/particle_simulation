@@ -221,16 +221,16 @@ def plot_hist_at_step(simulation: Simulation, t: int, ax: Axes, flux=False):
     hist, edges = simulation.generate_single_hist_at(t)
 
     crossings = simulation.bin_crossings[t]
-    x_values = np.linspace(0, simulation.L, 100)
+    x_values = np.linspace(0, simulation.L, 250)
 
-    hist_patch = ax.stairs(hist, edges, fill=True, label="Number Density (Number/meter)")
+    hist_patch = ax.stairs(hist, edges, fill=True, label="Number Density (m^-1)")
     hist_patch.set_facecolor((0.80, 0.30, 0.50))
 
     if flux:
         # Shows the boundary condition better to also have the first crossing at the end
         crossings.append(crossings[0])
         crossing_per_time = [c / simulation.dt for c in crossings]
-        ax.stem(edges, crossing_per_time, label="Flux (Number/second)")
+        ax.stem(edges, crossing_per_time, label="Flux (s^-1)", linefmt="orange")
 
     if flux:
         f = simulation.get_fourier_bound_func(10)
@@ -240,10 +240,12 @@ def plot_hist_at_step(simulation: Simulation, t: int, ax: Axes, flux=False):
         g = simulation.get_gaussian_func(5)
 
     y_values = [f(x, t * simulation.dt) for x in x_values]
-    ax.plot(x_values, y_values, color=(0.05, 0.50, 0.24), label="Sine")
+    ax.plot(x_values, y_values, color=(0.08, 0.60, 0.36), label="Sine", linewidth=2)
 
     y_values = [g(x, t * simulation.dt) for x in x_values]
-    ax.plot(x_values, y_values, color=(0.15, 0.10, 0.40), label="Gauss")
+    ax.plot(x_values, y_values, color=(0.00, 0.30, 0.45), label="Gauss", linewidth=3, linestyle='dashed')
+
+    ax.legend(loc="upper left", fontsize='small')
 
 
 def plot_hists_at_steps(simulation: Simulation, t_values: list[int], num_x: int, num_y: int, flux=False):
@@ -252,6 +254,7 @@ def plot_hists_at_steps(simulation: Simulation, t_values: list[int], num_x: int,
     for i in range(len(t_values)):
         simulation.plot_hist_at_step(t_values[i], axes[i % num_y, i // num_y], flux)
 
+    fig.set_size_inches(15, 5)
     plt.show()
 
 
