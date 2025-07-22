@@ -147,12 +147,15 @@ def plot_aggregated_hists(sim: Simulation, ax: Axes):
     dx = sim.L / sim.histogram_config['num_x']
     expected_mean = n
     expected_var = n / dx * (1 - 1/sim.histogram_config['num_x'])
+    expected_sd = np.sqrt(expected_var)
 
     empirical_mean = np.mean(hists)
     empirical_var = np.var(hists)
+    empirical_sd = np.sqrt(empirical_var)
 
-    ax.text(0.97, 0.93, f"Analysis: µ={expected_mean}, σ²={expected_var:.2f}", transform=ax.transAxes, ha='right')
-    ax.text(0.97, 0.86, f"Data: µ={empirical_mean}, σ²={empirical_var:.2f}", transform=ax.transAxes, ha= 'right')
+
+    ax.text(0.97, 0.93, f"Analysis: µ={expected_mean}, σ={expected_sd:.2f}", transform=ax.transAxes, ha='right')
+    ax.text(0.97, 0.86, f"Data: µ={empirical_mean}, σ={empirical_sd:.2f}", transform=ax.transAxes, ha= 'right')
     ax.set_xlabel('Number Density')
     ax.set_ylabel('Probability Density')
     ax.set_title(f"N={sim.num_particles}, dx={dx}, D={sim.D}")
@@ -180,11 +183,14 @@ def plot_aggregated_hists(sim: Simulation, ax: Axes):
     ax.legend(loc="upper left")
 
 
-def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int):
+def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int, save_to=None):
     fig, axes = plt.subplots(num_x, num_y, squeeze=True, layout='constrained')
 
     for i in range(len(sims)):
         plot_aggregated_hists(sims[i], axes[i % 2, i // 2])
+
+    if save_to:
+        plt.savefig(save_to)
 
     plt.show()
 

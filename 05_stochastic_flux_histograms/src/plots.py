@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 import matplotlib.animation as animation
 from matplotlib import colors
+from matplotlib.transforms import Bbox
+
 from simulation import Simulation
 import numpy as np
 from functools import reduce
@@ -185,13 +187,15 @@ def plot_flux_hists(sim: Simulation, ax: Axes):
     n = sim.num_particles / sim.L
     expected_mean = 0
     expected_var = 2 * n * np.sqrt(sim.D / (np.pi * sim.dt ** 3))
+    expected_sd = np.sqrt(expected_var)
 
     empirical_mean = np.mean(hists)
     empirical_var = np.var(hists)
+    empirical_sd = np.sqrt(empirical_var)
 
     # ax.text(0.01, 0.79, f"N={sim.num_particles}, dt={sim.dt}, D={sim.D}", transform=ax.transAxes, ha= 'left')
-    ax.text(0.97, 0.93, f"Analysis: µ={expected_mean}, σ²={expected_var:.2f}", transform=ax.transAxes, ha='right')
-    ax.text(0.97, 0.86, f"Data: µ={empirical_mean:.2f}, σ²={empirical_var:.2f}", transform=ax.transAxes, ha= 'right')
+    ax.text(0.97, 0.93, f"Analysis: µ={expected_mean}, σ={expected_sd:.2f}", transform=ax.transAxes, ha='right')
+    ax.text(0.97, 0.86, f"Data: µ={empirical_mean:.2f}, σ={empirical_sd:.2f}", transform=ax.transAxes, ha= 'right')
     ax.set_xlabel('Flux (number/second)')
     ax.set_ylabel('Probability Density')
     ax.set_title( f"N={sim.num_particles}, D={sim.D}, dx={sim.L/sim.histogram_config['num_x']}, dt={sim.dt}")
@@ -215,7 +219,7 @@ def plot_flux_hists(sim: Simulation, ax: Axes):
 
 
 
-def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int, flux=False):
+def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int, flux=False, save_to=None):
     fig, axes = plt.subplots(num_x, num_y, squeeze=True, layout='constrained')
 
     for i in range(len(sims)):
@@ -223,6 +227,9 @@ def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int, flux=Fal
             plot_flux_hists(sims[i], axes[i % 2, i // 2])
         else:
             plot_aggregated_hists(sims[i], axes[i % 2, i // 2])
+
+    if save_to:
+        plt.savefig(save_to)
 
     plt.show()
 
