@@ -248,13 +248,17 @@ def plot_hist_at_step(simulation: Simulation, t: int, ax: Axes, flux=False):
     ax.legend(loc="upper left", fontsize='small')
 
 
-def plot_hists_at_steps(simulation: Simulation, t_values: list[int], num_x: int, num_y: int, flux=False):
+def plot_hists_at_steps(simulation: Simulation, t_values: list[int], num_x: int, num_y: int, flux=False, save_to=None):
     fig, axes = plt.subplots(num_y, num_x, squeeze=False, layout='constrained')
 
     for i in range(len(t_values)):
         simulation.plot_hist_at_step(t_values[i], axes[i % num_y, i // num_y], flux)
 
     fig.set_size_inches(15, 5)
+
+    if save_to:
+        plt.savefig(save_to)
+
     plt.show()
 
 
