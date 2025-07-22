@@ -10,28 +10,17 @@ import solutions
 
 # Make a plot of the simulation using matplotlib and show it to the user
 # If save_to is specified, the plot is saved to whatever directory is specified by the user.
-def plot(simulation: Simulation, save_to: str =None):
-    # Parameters to make the plots look a bit nicer
-    params = {
-        'axes.titlesize': 14,
-        'axes.labelsize': 12,
-        'axes.titleweight': 'bold'
-    }
-    plt.rcParams.update(params)
+def plot(simulation: Simulation, ax: Axes):
 
     # The time values to plot against
     t_values = [i * simulation.dt for i in range(simulation.current_step)]
 
     for particle in simulation.particles:
-        plt.scatter(t_values, particle.history, s=2)
+        ax.scatter(t_values, particle.history, s=2)
 
-    plt.xlabel('Time')
-    plt.ylabel('Particle position')
-
-    if save_to:
-        plt.savefig(save_to)
-
-    plt.show()
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Particle position (m)')
+    ax.set_title(f'D = {simulation.D}')
 
 
 # Make a plot of the simulation's histogram using matplotlib and show it to the user
@@ -273,6 +262,19 @@ def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int, flux=Fal
 
     plt.show()
 
+
+def plot_multiple(sims: list[Simulation], num_x: int, num_y: int, save_to=None):
+    fig, axes = plt.subplots(num_y, num_x, squeeze=False, layout='constrained')
+
+    for i in range(len(sims)):
+        sims[i].plot(axes[i % num_y, i // num_y])
+
+    fig.set_size_inches(num_x * 5, num_y * 5)
+
+    if save_to:
+        plt.savefig(save_to)
+
+    plt.show()
 
 
 
