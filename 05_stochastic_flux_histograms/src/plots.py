@@ -228,6 +228,8 @@ def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int, flux=Fal
         else:
             plot_aggregated_hists(sims[i], axes[i % 2, i // 2])
 
+    fig.set_size_inches(10, 10)
+
     if save_to:
         plt.savefig(save_to)
 
