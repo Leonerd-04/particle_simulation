@@ -32,13 +32,22 @@ def main():
     except Exception as e:
         print(f"An error occurred: {e}")
 
-    for i in range(4):
-        params = load_config(f"../configs/config_{i}.json")
-        simulation = Simulation(params)
+    config2 = load_config("../configs/config2.json")
+    config2['p_init'] = lambda: 0.5
+    sim2 = Simulation(config2)
 
-        simulation.run_steps(100)
-        simulation.save_to(f"../../out/sim5_{i}.json")
+    sim2.run_steps(200)
 
+    sim2.save_to("../../out/sim6-2.json", as_json=True)
+
+
+    config3 = load_config("../configs/config3.json")
+    config3['p_init'] = lambda: 0.5
+    sim3 = Simulation(config3)
+
+    sim3.run_steps(500)
+
+    sim3.save_to("../../out/sim6-3.json", as_json=True)
 
 
 if __name__ == "__main__":

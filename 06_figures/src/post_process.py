@@ -2,11 +2,13 @@ from simulation import Simulation
 import plots
 
 def plot_graphs():
-    simulations = []
-    for i in range(4):
-        simulations.append(Simulation.open(f"../../out/sim5_{i}.json"))
+    sim2 = Simulation.open("../../out/sim6-2.json")
+    sim2.initializer = lambda: 0.5
+    sim2.plot_hists_at_steps([1, 15, 95], 3, 1)
 
-    plots.plot_multiple_hists(simulations, 2, 2, flux=True)
+    sim3 = Simulation.open("../../out/sim6-3.json")
+    sim3.initializer = lambda: 0.5
+    sim3.plot_hists_at_steps([1, 15, 460], 3, 1, flux=True)
 
 
 if __name__ == "__main__":

@@ -214,6 +214,46 @@ def plot_flux_hists(sim: Simulation, ax: Axes):
     ax.legend(loc="upper left")
 
 
+def plot_hist_at_step(simulation: Simulation, t: int, ax: Axes, flux=False):
+    ax.set_xlabel('x position')
+    ax.set_title( f"t = {t * simulation.dt}")
+
+    hist, edges = simulation.generate_single_hist_at(t)
+
+    crossings = simulation.bin_crossings[t]
+    x_values = np.linspace(0, simulation.L, 100)
+
+    hist_patch = ax.stairs(hist, edges, fill=True, label="Number Density (Number/meter)")
+    hist_patch.set_facecolor((0.80, 0.30, 0.50))
+
+    if flux:
+        # Shows the boundary condition better to also have the first crossing at the end
+        crossings.append(crossings[0])
+        crossing_per_time = [c / simulation.dt for c in crossings]
+        ax.stem(edges, crossing_per_time, label="Flux (Number/second)")
+
+    if flux:
+        f = simulation.get_fourier_bound_func(10)
+        g = simulation.get_gaussian_bound_func(5)
+    else:
+        f = simulation.get_fourier_func(10)
+        g = simulation.get_gaussian_func(5)
+
+    y_values = [f(x, t * simulation.dt) for x in x_values]
+    ax.plot(x_values, y_values, color=(0.05, 0.50, 0.24), label="Sine")
+
+    y_values = [g(x, t * simulation.dt) for x in x_values]
+    ax.plot(x_values, y_values, color=(0.15, 0.10, 0.40), label="Gauss")
+
+
+def plot_hists_at_steps(simulation: Simulation, t_values: list[int], num_x: int, num_y: int, flux=False):
+    fig, axes = plt.subplots(num_y, num_x, squeeze=False, layout='constrained')
+
+    for i in range(len(t_values)):
+        simulation.plot_hist_at_step(t_values[i], axes[i % num_y, i // num_y], flux)
+
+    plt.show()
+
 
 def plot_multiple_hists(sims: list[Simulation], num_x: int, num_y: int, flux=False):
     fig, axes = plt.subplots(num_x, num_y, squeeze=True, layout='constrained')
@@ -234,3 +274,5 @@ Simulation.plot = plot
 Simulation.plot_hists = plot_hists
 Simulation.plot_hists_generated = plot_hists_generated
 Simulation.plot_aggregated_hists = plot_aggregated_hists
+Simulation.plot_hist_at_step = plot_hist_at_step
+Simulation.plot_hists_at_steps = plot_hists_at_steps

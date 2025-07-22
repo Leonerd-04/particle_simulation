@@ -81,6 +81,31 @@ class Simulation:
         steps = time // self.dt
         self.run_steps(steps)
 
+    # Samples the simulation's history num_t times to get num_t histograms
+    # each with num_x cells
+    # Returns the histograms themselves and the edges of the bins, for graphing purposes.
+    def generate_single_hist_at(self, step) -> tuple[list, list]:
+        num_x = self.histogram_config['num_x']
+        density = self.histogram_config['number_density']
+
+        dx = self.L / num_x
+
+        # Initializes an array of 0's to represent our cells
+        histogram = [0] * num_x
+        for particle in self.particles:
+            # Integer division by the size of the cell gets us which cell the particle is in
+            cell = int(particle.history[step] // dx)
+
+            # There is a particle in the cell just calculated. This counts it.
+            histogram[cell] += 1
+
+        if density:
+            number_density_histogram = [value / dx for value in histogram]
+            result = number_density_histogram
+        else:
+            result = histogram
+
+        return result, [i * dx for i in range(num_x + 1)]
 
     # Samples the simulation's history num_t times to get num_t histograms
     # each with num_x cells
